@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - AdminPro</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-box">
+        <h1 class="auth-title">Create Account</h1>
+        <form id="signupForm">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" id="name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-input" id="email" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="password" required />
+          </div>
+          <button type="submit" class="btn" onclick="signup()">Create Account</button>
+        </form>
+        <a href="login.html" class="auth-link"
+          >Already have an account? Login</a
+        >
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAclrl8JXJB-N9EsOV0nJFvzhiaVxNhLH0",
+        authDomain: "ecom-app-8a0f8.firebaseapp.com",
+        databaseURL: "https://ecom-app-8a0f8-default-rtdb.firebaseio.com",
+        projectId: "ecom-app-8a0f8",
+        storageBucket: "ecom-app-8a0f8.firebasestorage.app",
+        messagingSenderId: "557396142894",
+        appId: "1:557396142894:web:6649927edb7cd5281ce8bf",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="signup.js"></script>
+
+    <!-- <script src="script.js"></script>
+    <script>
+      checkAuth();
+      document.getElementById("signupForm").onsubmit = (e) => {
+        e.preventDefault();
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        if (register(name, email, password)) {
+          alert("Account created! Please login.");
+          window.location.href = "login.html";
+        }
+      };
+    </script> -->
+  </body>
+</html>

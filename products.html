@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - AdminPro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">Products</h1>
+                <button class="btn btn-sm" onclick="openModal()">+ Add Product</button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Data here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Product</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="modal-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" class="form-input" id="prod-name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-input" id="prod-cat" required>
+                        <!-- Options filled via JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price</label>
+                    <input type="number" class="form-input" id="prod-price" required>
+                </div>
+                <button type="submit" class="btn">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // checkAuth();
+        document.getElementById('sidebar-container').innerHTML = getSidebar();
+
+        let products = getData('products');
+        const categories = getData('categories');
+        const tableBody = document.getElementById('table-body');
+        const modal = document.getElementById('modal');
+        const modalForm = document.getElementById('modal-form');
+        const catSelect = document.getElementById('prod-cat');
+
+        // Fill category select
+        catSelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+        function render() {
+            tableBody.innerHTML = products.map(p => `
+                <tr>
+                    <td>#${p.id}</td>
+                    <td>${p.name}</td>
+                    <td>${p.category}</td>
+                    <td>$${p.price}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="edit(${p.id})">Edit</button>
+                        <button class="action-btn delete-btn" onclick="del(${p.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openModal(id = null) {
+            document.getElementById('edit-id').value = id || '';
+            document.getElementById('modal-title').textContent = id ? 'Edit Product' : 'Add Product';
+            if (id) {
+                const p = products.find(prod => prod.id === id);
+                document.getElementById('prod-name').value = p.name;
+                document.getElementById('prod-cat').value = p.category;
+                document.getElementById('prod-price').value = p.price;
+            } else {
+                modalForm.reset();
+            }
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function edit(id) {
+            openModal(id);
+        }
+
+        function del(id) {
+            if(confirm('Are you sure?')) {
+                products = products.filter(p => p.id !== id);
+                setData('products', products);
+                render();
+            }
+        }
+
+        modalForm.onsubmit = (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const name = document.getElementById('prod-name').value;
+            const category = document.getElementById('prod-cat').value;
+            const price = document.getElementById('prod-price').value;
+
+            if (id) {
+                const index = products.findIndex(p => p.id == id);
+                products[index] = { id: parseInt(id), name, category, price: parseInt(price) };
+            } else {
+                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                products.push({ id: newId, name, category, price: parseInt(price) });
+            }
+            setData('products', products);
+            render();
+            closeModal();
+        };
+
+        render();
+    </script>
+</body>
+</html>
