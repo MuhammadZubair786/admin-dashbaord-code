@@ -43,6 +43,8 @@
             </div>
             <form id="modal-form">
                 <input type="hidden" id="edit-id">
+                <input type="file" id="file" >
+                <br>
                 <div class="form-group">
                     <label class="form-label">Product Name</label>
                     <input type="text" class="form-input" id="prod-name" required>
@@ -62,86 +64,28 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database-compat.js"></script>
     <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAclrl8JXJB-N9EsOV0nJFvzhiaVxNhLH0",
+        authDomain: "ecom-app-8a0f8.firebaseapp.com",
+        databaseURL: "https://ecom-app-8a0f8-default-rtdb.firebaseio.com",
+        projectId: "ecom-app-8a0f8",
+        storageBucket: "ecom-app-8a0f8.firebasestorage.app",
+        messagingSenderId: "557396142894",
+        appId: "1:557396142894:web:6649927edb7cd5281ce8bf",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+
+    <script src="script.js"></script>
+    <script src="./product.js">
         // checkAuth();
-        document.getElementById('sidebar-container').innerHTML = getSidebar();
-
-        let products = getData('products');
-        const categories = getData('categories');
-        const tableBody = document.getElementById('table-body');
-        const modal = document.getElementById('modal');
-        const modalForm = document.getElementById('modal-form');
-        const catSelect = document.getElementById('prod-cat');
-
-        // Fill category select
-        catSelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-
-        function render() {
-            tableBody.innerHTML = products.map(p => `
-                <tr>
-                    <td>#${p.id}</td>
-                    <td>${p.name}</td>
-                    <td>${p.category}</td>
-                    <td>$${p.price}</td>
-                    <td>
-                        <button class="action-btn edit-btn" onclick="edit(${p.id})">Edit</button>
-                        <button class="action-btn delete-btn" onclick="del(${p.id})">Delete</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function openModal(id = null) {
-            document.getElementById('edit-id').value = id || '';
-            document.getElementById('modal-title').textContent = id ? 'Edit Product' : 'Add Product';
-            if (id) {
-                const p = products.find(prod => prod.id === id);
-                document.getElementById('prod-name').value = p.name;
-                document.getElementById('prod-cat').value = p.category;
-                document.getElementById('prod-price').value = p.price;
-            } else {
-                modalForm.reset();
-            }
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-        }
-
-        function edit(id) {
-            openModal(id);
-        }
-
-        function del(id) {
-            if(confirm('Are you sure?')) {
-                products = products.filter(p => p.id !== id);
-                setData('products', products);
-                render();
-            }
-        }
-
-        modalForm.onsubmit = (e) => {
-            e.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            const name = document.getElementById('prod-name').value;
-            const category = document.getElementById('prod-cat').value;
-            const price = document.getElementById('prod-price').value;
-
-            if (id) {
-                const index = products.findIndex(p => p.id == id);
-                products[index] = { id: parseInt(id), name, category, price: parseInt(price) };
-            } else {
-                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-                products.push({ id: newId, name, category, price: parseInt(price) });
-            }
-            setData('products', products);
-            render();
-            closeModal();
-        };
-
-        render();
+      
     </script>
 </body>
 </html>

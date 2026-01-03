@@ -9,6 +9,9 @@ var categoryCount = document.getElementById("cat-count");
 var saveBtn = document.getElementById("saveBtn");
 var key = "";
 
+// 40
+// 41
+
 async function SaveDb() {
   event.preventDefault();
   var key = await firebase.database().ref("category").push(catObject).getKey();
@@ -90,14 +93,19 @@ async function getAllCatefory() {
     .ref("category")
     .get()
     .then((catDB) => {
-      console.log(catDB.val());
+      console.log(catDB.val()); //convert into read form user
+      if(catDB.val()==null){
+         tableBody.innerHTML = "<h1>No Data</h1>";
+        return
+
+      }
       var data = Object.values(catDB.val());
       console.log(data);
       tableBody.innerHTML = "";
       for (var i = 0; i < data.length; i++) {
         tableBody.innerHTML += `
              <tr>
-                    <td>#${i}</td>
+                    <td>${i+1}</td>
                      <td>${data[i].categoryName}</td>
                     <td>${data[i]["categoryCount"]}</td>
                      <td>
