@@ -152,6 +152,12 @@ body {
     color: var(--primary);
 }
 
+img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
 .logout-btn {
     margin-top: auto;
     background: rgba(239, 68, 68, 0.1);
